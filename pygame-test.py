@@ -8,12 +8,26 @@ def clamp (val, low, high):
 class Player:
     x = 0.0
     y = 0.0
+    image = None
+
+    def __init__ (self, img = None):
+        # load image if declared
+        if img is not None:
+            self.image = pygame.image.load (img)
 
     def get_rect (self):
         return (int (self.x), int (self.y), 200, 200)
 
     def get_point (self):
         return (int (self.x), int (self.y))
+
+    def draw_onto (self, screen):
+        if self.image is None:
+            # if player wasn't defined with an image
+            pygame.draw.circle (screen, (0, 0, 255), self.get_point(), 75)
+        else:
+            # blit image onto screen
+            screen.blit (self.image, self.get_rect())
 
 
 # Simple Controls handler using boolean states
@@ -68,16 +82,19 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
         elif event.type == pygame.KEYDOWN:
             gamecon.check_events (event.key, event.type)
+            if event.key == pygame.K_ESCAPE:
+                running = False
         elif event.type == pygame.KEYUP:
             gamecon.check_events (event.key, event.type)
 
     gamecon.move_player (deltaTime)
 
     screen.fill ((255, 255, 255))
-    pygame.draw.circle (screen, (0, 0, 255), player.get_point(), 75)
-    #screen.blit (ironman_jpeg, player.get_rect())
+
+    player.draw_onto (screen)
 
     pygame.display.flip()
 
