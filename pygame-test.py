@@ -70,8 +70,6 @@ pygame.init()
 screen = pygame.display.set_mode([1280, 720])
 pygame.display.set_caption ("ubuntu lmao")
 
-#ironman_jpeg = pygame.image.load ("ironman.jpeg")
-
 # clock keeps the framerate at 60FPS while making sure the game runs
 # at a constant speed
 clock = pygame.time.Clock()
@@ -93,7 +91,6 @@ while running:
     gamecon.move_player (deltaTime)
 
     screen.fill ((255, 255, 255))
-
     player.draw_onto (screen)
 
     pygame.display.flip()
