@@ -3,6 +3,19 @@ import pygame
 def clamp (val, low, high):
     return max (low, min (val, high))
 
+# Stores x and y position of the player
+# get_rect and get_point are for easy data use
+class Player:
+    x = 0.0
+    y = 0.0
+
+    def get_rect (self):
+        return (int (self.x), int (self.y), 200, 200)
+
+    def get_point (self):
+        return (int (self.x), int (self.y))
+
+
 # Simple Controls handler using boolean states
 class Controller:
     holds = {
@@ -11,6 +24,9 @@ class Controller:
     pygame.K_d : False,
     pygame.K_a : False,
     }
+
+    def __init__ (self, player):
+        self.player = player
 
     def check_events (self, key, eventUp):
         self.holds [key] = eventUp == pygame.KEYDOWN
@@ -24,16 +40,23 @@ class Controller:
     def get_direction_y (self) -> int:
         return self.holds [pygame.K_s] - self.holds [pygame.K_w]
 
-# declare our controller
-gamecon = Controller()
+    def move_player (self, deltaTime):
+        self.player.x += gamecon.get_direction_x() * deltaTime
+        self.player.y += gamecon.get_direction_y() * deltaTime
+
+
+# declare a default player
+player = Player()
+
+# declare our controller controlling the player
+gamecon = Controller (player)
 
 # basic pygame window setup, keep screen variable for rendering
 pygame.init()
 screen = pygame.display.set_mode([1280, 720])
 pygame.display.set_caption ("ubuntu lmao")
 
-x = 0.0
-y = 0.0
+#ironman_jpeg = pygame.image.load ("ironman.jpeg")
 
 # clock keeps the framerate at 60FPS while making sure the game runs
 # at a constant speed
@@ -50,11 +73,12 @@ while running:
         elif event.type == pygame.KEYUP:
             gamecon.check_events (event.key, event.type)
 
-    x += gamecon.get_direction_x() * deltaTime
-    y += gamecon.get_direction_y() * deltaTime
+    gamecon.move_player (deltaTime)
 
-    screen.fill((255, 255, 255))
-    pygame.draw.circle(screen, (0, 0, 255), (int (x), int (y)), 75)
+    screen.fill ((255, 255, 255))
+    pygame.draw.circle (screen, (0, 0, 255), player.get_point(), 75)
+    #screen.blit (ironman_jpeg, player.get_rect())
+
     pygame.display.flip()
 
 pygame.quit()
