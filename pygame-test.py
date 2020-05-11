@@ -55,8 +55,8 @@ class Controller:
         return self.holds [pygame.K_s] - self.holds [pygame.K_w]
 
     def move_player (self, deltaTime):
-        self.player.x += gamecon.get_direction_x() * deltaTime
-        self.player.y += gamecon.get_direction_y() * deltaTime
+        self.player.x += self.get_direction_x() * deltaTime
+        self.player.y += self.get_direction_y() * deltaTime
 
 
 # declare a default player
